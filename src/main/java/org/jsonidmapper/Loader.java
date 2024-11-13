@@ -1,0 +1,31 @@
+package org.jsonidmapper;
+
+import java.io.IOException;
+import java.io.InputStream;
+import lombok.extern.slf4j.Slf4j;
+import java.util.Properties;
+
+@Slf4j
+public class Loader
+{
+	/**
+	 * A method used to get the reader file data.
+	 * @return A {@link java.util.Properties} file.
+	 */
+	protected Properties getProperties(String propertiesPath)
+	{
+		java.util.Properties properties = new java.util.Properties();
+		try (InputStream input = getClass().getClassLoader().getResourceAsStream(propertiesPath))
+		{
+			if (input == null){
+				log.warn("{} file not found in classpath.", propertiesPath);
+			} else {
+				log.info("Found {} file. Loading.", propertiesPath);
+				properties.load(input);
+			}
+		} catch (IOException e) {
+			log.error("Error loading {} file.", propertiesPath, e);
+		}
+		return properties;
+	}
+}
