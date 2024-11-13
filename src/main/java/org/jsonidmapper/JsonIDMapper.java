@@ -5,22 +5,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
-import lombok.Getter;
-import lombok.Setter;
-@Getter
 public class JsonIDMapper
 {
-	@Setter
-	private int prefixLength;
+	private final int prefixLength;
 	private HashMap<String, File> data;
 	private final Properties filePath;
-
-	private final Loader loader;
 	private final Mapper mapper;
 
 	public JsonIDMapper(String filesPath, int prefixLength){
 		this.prefixLength = prefixLength;
-		this.loader = new Loader();
+		Loader loader = new Loader();
 		this.mapper = new Mapper(prefixLength);
 		this.filePath = loader.getProperties(filesPath);
 		this.data = mapper.getData(filePath);
