@@ -12,6 +12,13 @@ public class JsonIDMapper
 	private final Properties filePath;
 	private final Mapper mapper;
 
+	/**
+	 * The constructor for a {@link JsonIDMapper} object.
+	 * @param filesPath A {@link String} value containing the path to the properties file.
+	 * @param prefixLength A {@link Integer} value sets the maximum length of the prefix for the ID.
+	 *                     If path names do not match the length, they will either be reduced to the length
+	 *                     or extended by padding the prefix with {@code #}.
+	 */
 	public JsonIDMapper(String filesPath, int prefixLength){
 		this.prefixLength = prefixLength;
 		Loader loader = new Loader();

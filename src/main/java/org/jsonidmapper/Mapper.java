@@ -21,6 +21,10 @@ public class Mapper
 {
 	private final int prefixLength;
 
+	/**
+	 * The constructor for a {@link Mapper} object.
+	 * @param prefixLength The maximum length of the ID prefix.
+	 */
 	public Mapper(int prefixLength){
 		this.prefixLength = prefixLength;
 	}
