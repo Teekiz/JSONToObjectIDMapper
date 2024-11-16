@@ -32,13 +32,13 @@ public class Mapper
 	/**
 	 * A method used to load the file paths and assign an ID to {@code data}.
 	 * @param paths A {@link Properties} file containing the name of the data and the file path.
+	 * @param data A {@link HashMap} of {@link String} and {@link File} containing previously loaded files.
 	 * @return A {@link HashMap} with the ID ({@link String}) and the {@link File} associated with the ID.
 	 */
-	protected HashMap<String, File> getData(Properties paths)
+	protected HashMap<String, File> getData(Properties paths, HashMap<String, File> data)
 	{
-		HashMap<String, File> data = new HashMap<>();
 		try {
-			if (paths != null){
+			if (paths != null && data != null){
 				for (Map.Entry<Object, Object> entry : paths.entrySet()) {
 					String type = (String) entry.getKey();
 					File directory = new File((String) entry.getValue());
@@ -51,7 +51,16 @@ public class Mapper
 
 						files.forEach(file -> {
 							String id = prefix + idNumber.getAndIncrement();
-							data.put(id, file);
+							while (data.containsKey(id)){
+								id = prefix + idNumber.getAndIncrement();
+							}
+
+							if (!data.containsValue(file)){
+								data.put(id, file);
+								log.debug("Added file with ID: {}", id);
+							} else {
+								log.debug("Skipped duplicate file: {}", file.getPath());
+							}
 						});
 					} else {
 						log.warn("Directory does not contain any JSON files.");

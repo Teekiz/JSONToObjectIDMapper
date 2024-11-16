@@ -10,11 +10,11 @@ public class Loader
 {
 	/**
 	 * A method used to get the reader file data.
-	 * @return A {@link java.util.Properties} file.
+	 * @return A {@link Properties} file.
 	 */
 	protected Properties getProperties(String propertiesPath)
 	{
-		java.util.Properties properties = new java.util.Properties();
+		Properties properties = new Properties();
 		try (InputStream input = getClass().getClassLoader().getResourceAsStream(propertiesPath))
 		{
 			if (input == null){
