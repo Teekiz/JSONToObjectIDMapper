@@ -41,21 +41,23 @@ public class Mapper
 			if (paths != null && data != null){
 				for (Map.Entry<Object, Object> entry : paths.entrySet()) {
 					String type = (String) entry.getKey();
+					String prefix = getPrefix(type);
 					File directory = new File((String) entry.getValue());
 
 					List<File> files = getAllJSONFiles(directory);
 
 					if (!files.isEmpty()){
-						String prefix = getPrefix(type);
-						AtomicInteger idNumber = new AtomicInteger();
+
+						//sets the ID to the last occurrence found
+						AtomicInteger idNumber = new AtomicInteger(1);
 
 						files.forEach(file -> {
 							String id = prefix + idNumber.getAndIncrement();
-							while (data.containsKey(id)){
+							while (data.containsKey(id)) {
 								id = prefix + idNumber.getAndIncrement();
 							}
 
-							if (!data.containsValue(file)){
+							if (!data.containsValue(file)) {
 								data.put(id, file);
 								log.debug("Added file with ID: {}", id);
 							} else {
@@ -81,7 +83,7 @@ public class Mapper
 	 * @param directory The root directory to be searched.
 	 * @return All .JSON files found within the directory.
 	 */
-	protected List<File> getAllJSONFiles(File directory)
+	private List<File> getAllJSONFiles(File directory)
 	{
 		try(Stream<Path> walk = Files.walk(directory.toPath()))
 		{
@@ -101,7 +103,7 @@ public class Mapper
 	 * @param name The name of the file type being provided.
 	 * @return A prefix for an ID determined by {@code prefixLength}
 	 */
-	protected String getPrefix(String name){
+	private String getPrefix(String name){
 		int nameLength = Math.min(name.length(), prefixLength);
 		StringBuilder prefixBuilder = new StringBuilder(name.substring(0, nameLength));
 

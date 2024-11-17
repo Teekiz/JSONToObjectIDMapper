@@ -1,5 +1,6 @@
 package org.jsonidmapper;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import lombok.extern.slf4j.Slf4j;
@@ -15,14 +16,10 @@ public class Loader
 	protected Properties getProperties(String propertiesPath)
 	{
 		Properties properties = new Properties();
-		try (InputStream input = getClass().getClassLoader().getResourceAsStream(propertiesPath))
+		try (InputStream input = new FileInputStream(propertiesPath))
 		{
-			if (input == null){
-				log.warn("{} file not found in classpath.", propertiesPath);
-			} else {
-				log.info("Found {} file. Loading.", propertiesPath);
-				properties.load(input);
-			}
+			log.info("Found {} file. Loading.", propertiesPath);
+			properties.load(input);
 		} catch (IOException e) {
 			log.error("Error loading {} file.", propertiesPath, e);
 		}

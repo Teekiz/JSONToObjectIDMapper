@@ -3,7 +3,6 @@ package org.jsonidmapper;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.stream.Collectors;
 public class JsonIDMapper
@@ -14,24 +13,26 @@ public class JsonIDMapper
 	private final Mapper mapper;
 	private final Storage storage;
 
-	//todo - need to make it so that it stores the ID in a file which it loads first.
-
 	/**
 	 * The constructor for a {@link JsonIDMapper} object.
-	 * @param filesPath A {@link String} value containing the path to the properties file.
+	 * @param filesPath A {@link String} value containing the absolute path to the properties file.
 	 * @param prefixLength A {@link Integer} value sets the maximum length of the prefix for the ID.
 	 *                     If path names do not match the length, they will either be reduced to the length
 	 *                     or extended by padding the prefix with {@code #}.
-	 * @param storagePath A {@link String} to determine where the data should be stored locally. Set to {@code null} to
-	 *                    avoid saving locally.
+	 * @param storagePath A {@link String} value containing the absolute path to the location where the data should be stored locally.
+	 *                    Set to {@code null} to avoid saving locally.
+	 * @param deleteMissingFiles A {@link Boolean} value used to determine if missing files should be included when mapping
+	 *                            files to IDs. If {@code true} then the existing ID and file will be deleted. If {@code false}
+	 *                            then the ID will be preserved. WARNING: If the ID is deleted, then this may lead to unintended side effects
+	 *                            for existing systems.
 	 */
-	public JsonIDMapper(String filesPath, int prefixLength, String storagePath){
+	public JsonIDMapper(String filesPath, int prefixLength, String storagePath, boolean deleteMissingFiles){
 		this.prefixLength = prefixLength;
 		Loader loader = new Loader();
 		this.mapper = new Mapper(prefixLength);
 
 		if (storagePath != null && !storagePath.isEmpty()){
-			this.storage = new Storage(storagePath, loader);
+			this.storage = new Storage(storagePath, loader, deleteMissingFiles);
 			this.data = storage.loadData();
 		} else {
 			this.data = new HashMap<>();
@@ -86,9 +87,9 @@ public class JsonIDMapper
 	 * @return A {@link Map.Entry} with the {@link File} and its {@link String ID}.
 	 */
 	public Map.Entry<String, File> getFileByName(String fileName){
-		return Objects.requireNonNull(data.entrySet()
+		return data.entrySet()
 			.stream()
 			.filter(file -> file.getValue().getName().contains(fileName))
-			.findFirst().orElse(null));
+			.findFirst().orElse(null);
 	}
 }
