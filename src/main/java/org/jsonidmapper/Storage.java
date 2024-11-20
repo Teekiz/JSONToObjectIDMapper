@@ -3,14 +3,12 @@ package org.jsonidmapper;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TreeMap;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 
 @Data
-@Slf4j
 public class Storage
 {
 	private Properties storedValues;
@@ -35,11 +33,11 @@ public class Storage
 	}
 
 	/**
-	 * A method used to load the data from {@code storedValues} into a {@link HashMap} object.
-	 * @return A {@link HashMap} of {@link String} and {@link File}.
+	 * A method used to load the data from {@code storedValues} into a {@link Map} object.
+	 * @return A {@link Map} of {@link String} and {@link File}.
 	 */
-	public HashMap<String, File> loadData(){
-		HashMap<String, File> data = new HashMap<>();
+	public Map<String, File> loadData(){
+		Map<String, File> data = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 		if (storedValues != null){
 			for (Map.Entry<Object, Object> entry : storedValues.entrySet()) {
 				String key = (String) entry.getKey();
@@ -57,10 +55,10 @@ public class Storage
 	}
 
 	/**
-	 * A method used to convert data from a {@link HashMap} object into a {@link Properties file}.
-	 * @param data A {@link HashMap} of {@link String} and {@link File} containing the mapped IDs and Files.
+	 * A method used to convert data from a {@link Map} object into a {@link Properties file}.
+	 * @param data A {@link Map} of {@link String} and {@link File} containing the mapped IDs and Files.
 	 */
-	public void saveData(HashMap<String, File> data){
+	public void saveData(Map<String, File> data){
 		storedValues = new Properties();
 			for (Map.Entry<String, File> entry : data.entrySet()){
 				storedValues.setProperty(entry.getKey(), entry.getValue().getPath());
@@ -74,9 +72,9 @@ public class Storage
 	private void saveFile(){
 		try (FileOutputStream outputStream = new FileOutputStream(path)) {
 			storedValues.store(outputStream, "File Paths");
-			log.info("{} created successfully.", path);
+			//log.info("{} created successfully.", path);
 		} catch (IOException e) {
-			log.error("Could not create storage files at path: {}", path, e);
+			//log.error("Could not create storage files at path: {}", path, e);
 		}
 	}
 }

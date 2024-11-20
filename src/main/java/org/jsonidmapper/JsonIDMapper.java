@@ -4,14 +4,17 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 public class JsonIDMapper
 {
 	private final int prefixLength;
-	private HashMap<String, File> data;
+	private Map<String, File> data;
 	private final Properties filePath;
 	private final Mapper mapper;
 	private final Storage storage;
+
+	//TODO - ignore caps for names, ids and files
 
 	/**
 	 * The constructor for a {@link JsonIDMapper} object.
@@ -35,7 +38,7 @@ public class JsonIDMapper
 			this.storage = new Storage(storagePath, loader, deleteMissingFiles);
 			this.data = storage.loadData();
 		} else {
-			this.data = new HashMap<>();
+			this.data = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 			this.storage = null;
 		}
 		this.filePath = loader.getProperties(filesPath);
@@ -72,13 +75,13 @@ public class JsonIDMapper
 	/**
 	 * A method used to gather all files containing the same prefix as the prefix.
 	 * @param prefix The prefix of the data to be returned.
-	 * @return A {@link HashMap} of {@link String} and {@link File} containing the IDs and file paths for the data.
+	 * @return A {@link Map} of {@link String} and {@link File} containing the IDs and file paths for the data.
 	 */
-	public HashMap<String, File> getFilesFromPrefix(String prefix){
+	public Map<String, File> getFilesFromPrefix(String prefix){
 		String finalId = prefix.substring(0, prefixLength);
 		return data.entrySet().stream()
-			.filter(file -> file.getKey().startsWith(finalId))
-			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, _) -> oldValue, HashMap::new));
+			.filter(file -> file.getKey().toUpperCase().startsWith(finalId.toUpperCase()))
+			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, _newValue) -> oldValue, HashMap::new));
 	}
 
 	/**
@@ -89,7 +92,7 @@ public class JsonIDMapper
 	public Map.Entry<String, File> getFileByName(String fileName){
 		return data.entrySet()
 			.stream()
-			.filter(file -> file.getValue().getName().contains(fileName))
+			.filter(file -> file.getValue().getName().toUpperCase().contains(fileName.toUpperCase()))
 			.findFirst().orElse(null);
 	}
 }

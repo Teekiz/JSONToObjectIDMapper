@@ -13,4 +13,11 @@ public class JsonIDMapperTest
 		Map.Entry<String, File> entry = jsonIDMapper.getFileByName("STRANGEINNUMBERS");
 		assertNotNull(entry);
 	}
+
+	@Test
+	public void testJsonIDMapperGet(){
+		JsonIDMapper jsonIDMapper = new JsonIDMapper("src/test/resources/filepath.properties", 5, "src/test/resources/storagepath.properties", true);
+		File file = jsonIDMapper.getFileFromID("PERKD1");
+		assertNotNull(file);
+	}
 }

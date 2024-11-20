@@ -3,10 +3,8 @@ package org.jsonidmapper;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import lombok.extern.slf4j.Slf4j;
 import java.util.Properties;
 
-@Slf4j
 public class Loader
 {
 	/**
@@ -18,10 +16,10 @@ public class Loader
 		Properties properties = new Properties();
 		try (InputStream input = new FileInputStream(propertiesPath))
 		{
-			log.info("Found {} file. Loading.", propertiesPath);
+			//log.info("Found {} file. Loading.", propertiesPath);
 			properties.load(input);
 		} catch (IOException e) {
-			log.error("Error loading {} file.", propertiesPath, e);
+			//log.error("Error loading {} file.", propertiesPath, e);
 		}
 		return properties;
 	}
