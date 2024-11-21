@@ -12,8 +12,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 @Getter
+@Slf4j
 public class Mapper
 {
 	private final int prefixLength;
@@ -56,20 +58,20 @@ public class Mapper
 
 							if (!data.containsValue(file)) {
 								data.put(id.toUpperCase(), file);
-								//log.debug("Added file with ID: {}", id);
+								log.debug("Added file with ID: {}", id);
 							} else {
-								//log.debug("Skipped duplicate file: {}", file.getPath());
+								log.debug("Skipped duplicate file: {}", file.getPath());
 							}
 						});
 					} else {
-						//log.warn("Directory does not contain any JSON files.");
+						log.warn("Directory does not contain any JSON files.");
 					}
 				}
 			}
 		}
 		catch (Exception e)
 		{
-			//log.error("Cannot load data.", e);
+			log.error("Cannot load data.", e);
 			throw new RuntimeException("Error loading data", e);
 		}
 		return data;
@@ -90,7 +92,7 @@ public class Mapper
 				.map(Path::toFile)
 				.collect(Collectors.toList());
 		} catch (IOException e) {
-			//log.error("Cannot read JSON files from path {}", directory);
+			log.error("Cannot read JSON files from path {}", directory);
 			return new ArrayList<>();
 		}
 	}

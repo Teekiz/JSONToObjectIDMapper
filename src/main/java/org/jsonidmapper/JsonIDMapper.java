@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+
 public class JsonIDMapper
 {
 	private final int prefixLength;

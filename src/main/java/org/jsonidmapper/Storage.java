@@ -7,8 +7,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
+@Slf4j
 public class Storage
 {
 	private Properties storedValues;
@@ -72,9 +74,9 @@ public class Storage
 	private void saveFile(){
 		try (FileOutputStream outputStream = new FileOutputStream(path)) {
 			storedValues.store(outputStream, "File Paths");
-			//log.info("{} created successfully.", path);
+			log.info("{} saved successfully.", path);
 		} catch (IOException e) {
-			//log.error("Could not create storage files at path: {}", path, e);
+			log.error("Could not create storage files at path: {}", path, e);
 		}
 	}
 }
