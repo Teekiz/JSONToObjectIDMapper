@@ -2,12 +2,16 @@ package org.jsonidmapper;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
+import lombok.Getter;
+
 public class JsonIDMapper
 {
-	private final int prefixLength;
+	@Getter
+	private List<String> prefixes;
 	private HashMap<String, File> data;
 	private final Properties filePath;
 	private final Mapper mapper;
@@ -16,9 +20,6 @@ public class JsonIDMapper
 	/**
 	 * The constructor for a {@link JsonIDMapper} object.
 	 * @param filesPath A {@link String} value containing the absolute path to the properties file.
-	 * @param prefixLength A {@link Integer} value sets the maximum length of the prefix for the ID.
-	 *                     If path names do not match the length, they will either be reduced to the length
-	 *                     or extended by padding the prefix with {@code #}.
 	 * @param storagePath A {@link String} value containing the absolute path to the location where the data should be stored locally.
 	 *                    Set to {@code null} to avoid saving locally.
 	 * @param deleteMissingFiles A {@link Boolean} value used to determine if missing files should be included when mapping
@@ -26,10 +27,9 @@ public class JsonIDMapper
 	 *                            then the ID will be preserved. WARNING: If the ID is deleted, then this may lead to unintended side effects
 	 *                            for existing systems.
 	 */
-	public JsonIDMapper(String filesPath, int prefixLength, String storagePath, boolean deleteMissingFiles){
-		this.prefixLength = prefixLength;
+	public JsonIDMapper(String filesPath, String storagePath, boolean deleteMissingFiles){
 		Loader loader = new Loader();
-		this.mapper = new Mapper(prefixLength);
+		this.mapper = new Mapper();
 
 		if (storagePath != null && !storagePath.isEmpty()){
 			this.storage = new Storage(storagePath, loader, deleteMissingFiles);
@@ -40,6 +40,7 @@ public class JsonIDMapper
 		}
 		this.filePath = loader.getProperties(filesPath);
 		this.data = mapper.getData(filePath, data);
+		this.prefixes = mapper.getPrefixes(filePath);
 		saveData();
 	}
 
@@ -48,6 +49,7 @@ public class JsonIDMapper
 	 */
 	public void updateMappedData(){
 		this.data = mapper.getData(filePath, data);
+		this.prefixes = mapper.getPrefixes(filePath);
 		saveData();
 	}
 
@@ -75,9 +77,8 @@ public class JsonIDMapper
 	 * @return A {@link HashMap} of {@link String} and {@link File} containing the IDs and file paths for the data.
 	 */
 	public HashMap<String, File> getFilesFromPrefix(String prefix){
-		String finalId = prefix.substring(0, prefixLength);
 		return data.entrySet().stream()
-			.filter(file -> file.getKey().startsWith(finalId))
+			.filter(file -> file.getKey().startsWith(prefix))
 			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, _) -> oldValue, HashMap::new));
 	}
 

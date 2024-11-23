@@ -1,16 +1,31 @@
 import java.io.File;
+import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.jsonidmapper.JsonIDMapper;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Slf4j
 public class JsonIDMapperTest
 {
 	@Test
 	public void testJsonIDMapper(){
-		JsonIDMapper jsonIDMapper = new JsonIDMapper("src/test/resources/filepath.properties", 5, "src/test/resources/storagepath.properties", true);
+		log.debug("TEST - testJsonIDMapper");
+		JsonIDMapper jsonIDMapper = new JsonIDMapper("src/test/resources/filepath.properties", "src/test/resources/storagepath.properties", true);
 		Map.Entry<String, File> entry = jsonIDMapper.getFileByName("STRANGEINNUMBERS");
 		assertNotNull(entry);
+	}
+
+	@Test
+	public void testPrefixes(){
+		log.debug("TEST - testPrefixes");
+		JsonIDMapper jsonIDMapper = new JsonIDMapper("src/test/resources/filepath.properties", "src/test/resources/storagepath.properties", true);
+		List<String> prefixes = jsonIDMapper.getPrefixes();
+		assertFalse(prefixes.isEmpty());
+		assertNotNull(jsonIDMapper.getFilesFromPrefix(prefixes.getFirst()));
 	}
 }

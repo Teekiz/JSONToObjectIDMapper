@@ -19,16 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 public class Mapper
 {
-	private final int prefixLength;
-
-	/**
-	 * The constructor for a {@link Mapper} object.
-	 * @param prefixLength The maximum length of the ID prefix.
-	 */
-	public Mapper(int prefixLength){
-		this.prefixLength = prefixLength;
-	}
-
 	/**
 	 * A method used to load the file paths and assign an ID to {@code data}.
 	 * @param paths A {@link Properties} file containing the name of the data and the file path.
@@ -40,8 +30,7 @@ public class Mapper
 		try {
 			if (paths != null && data != null){
 				for (Map.Entry<Object, Object> entry : paths.entrySet()) {
-					String type = (String) entry.getKey();
-					String prefix = getPrefix(type);
+					String prefix = (String) entry.getKey();
 					File directory = new File((String) entry.getValue());
 
 					List<File> files = getAllJSONFiles(directory);
@@ -60,8 +49,6 @@ public class Mapper
 							if (!data.containsValue(file)) {
 								data.put(id, file);
 								log.debug("Added file with ID: {}", id);
-							} else {
-								log.debug("Skipped duplicate file: {}", file.getPath());
 							}
 						});
 					} else {
@@ -99,19 +86,18 @@ public class Mapper
 	}
 
 	/**
-	 * A method used to get the prefix for the file type.
-	 * @param name The name of the file type being provided.
-	 * @return A prefix for an ID determined by {@code prefixLength}
+	 * A method used to create a list of prefixes from the filepaths properties file.
+	 * @param paths The properties file containing the file paths to the data.
+	 * @return A {@link List} of {@link String} prefixes for each file path found in the {@code paths} {@link Properties} file.
 	 */
-	private String getPrefix(String name){
-		int nameLength = Math.min(name.length(), prefixLength);
-		StringBuilder prefixBuilder = new StringBuilder(name.substring(0, nameLength));
-
-		int remainingLength = prefixLength - prefixBuilder.length();
-		if (remainingLength > 0) {
-			prefixBuilder.append("#".repeat(remainingLength));
+	protected List<String> getPrefixes(Properties paths){
+		List<String> prefixes = new ArrayList<>();
+		if (paths != null) {
+			for (Object prefix : paths.keySet()) {
+				prefixes.add((String) prefix);
+			}
 		}
-
-		return prefixBuilder.toString();
+		log.info("Found {} paths. Prefixes: {}", prefixes.size(), prefixes);
+		return prefixes;
 	}
 }
