@@ -78,7 +78,7 @@ public class JsonIDMapper
 	 */
 	public HashMap<String, File> getFilesFromPrefix(String prefix){
 		return data.entrySet().stream()
-			.filter(file -> file.getKey().startsWith(prefix))
+			.filter(file -> file.getKey().startsWith(prefix.toUpperCase()))
 			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, _) -> oldValue, HashMap::new));
 	}
 
