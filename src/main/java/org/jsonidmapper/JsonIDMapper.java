@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 
 public class JsonIDMapper
 {
@@ -90,7 +91,7 @@ public class JsonIDMapper
 	public Map.Entry<String, File> getFileByName(String fileName){
 		return data.entrySet()
 			.stream()
-			.filter(file -> file.getValue().getName().contains(fileName))
+			.filter(file -> StringUtils.containsIgnoreCase(file.getValue().getName(), fileName))
 			.findFirst().orElse(null);
 	}
 }

@@ -28,4 +28,15 @@ public class JsonIDMapperTest
 		assertFalse(prefixes.isEmpty());
 		assertNotNull(jsonIDMapper.getFilesFromPrefix(prefixes.getFirst()));
 	}
+
+	@Test
+	public void testFileName(){
+		log.debug("TEST - testFileName");
+		JsonIDMapper jsonIDMapper = new JsonIDMapper("src/test/resources/filepath.properties", "src/test/resources/storagepath.properties", true);
+		File file = jsonIDMapper.getFileByName("GAUSSRIFLE").getValue();
+		assertNotNull(file);
+
+		File fileLowerCase = jsonIDMapper.getFileByName("gaussrifle").getValue();
+		assertNotNull(fileLowerCase);
+	}
 }
