@@ -12,7 +12,7 @@ public class JsonIDMapper
 {
 	@Getter
 	private List<String> prefixes;
-	private HashMap<String, File> data;
+	private Map<String, File> data;
 	private final Properties filePath;
 	private final Mapper mapper;
 	private final Storage storage;
