@@ -23,7 +23,7 @@ public class Loader
 			properties.load(input);
 		} catch (IOException e) {
 			if (e instanceof FileNotFoundException) {
-				log.error("Cannot find properties file!");
+				log.error("Cannot find file path properties file!");
 			} else {
 				log.error("Error loading {} file.", propertiesPath, e);
 			}

@@ -1,6 +1,7 @@
 package org.jsonidmapper;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Map;
@@ -76,6 +77,9 @@ public class Storage
 			storedValues.store(outputStream, "File Paths");
 			log.info("{} saved successfully.", path);
 		} catch (IOException e) {
+			if (e instanceof FileNotFoundException){
+				log.error("Could not find storage path properties file!");
+			}
 			log.error("Could not create storage files at path: {}", path, e);
 		}
 	}
