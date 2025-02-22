@@ -79,8 +79,9 @@ public class Storage
 		} catch (IOException e) {
 			if (e instanceof FileNotFoundException){
 				log.error("Could not find storage path properties file!");
+			} else {
+				log.error("Could not create storage files at path: {}", path, e);
 			}
-			log.error("Could not create storage files at path: {}", path, e);
 		}
 	}
 }
