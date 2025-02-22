@@ -1,6 +1,7 @@
 package org.jsonidmapper;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -21,7 +22,11 @@ public class Loader
 			log.info("Found {} file. Loading.", propertiesPath);
 			properties.load(input);
 		} catch (IOException e) {
-			log.error("Error loading {} file.", propertiesPath, e);
+			if (e instanceof FileNotFoundException) {
+				log.error("Cannot find properties file!");
+			} else {
+				log.error("Error loading {} file.", propertiesPath, e);
+			}
 		}
 		return properties;
 	}
