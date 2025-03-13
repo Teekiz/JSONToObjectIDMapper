@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -77,6 +78,7 @@ public class Mapper
 				.filter(Files::isRegularFile)
 				.filter(path -> path.toString().toUpperCase().endsWith(".json".toUpperCase()))
 				.map(Path::toFile)
+				.sorted(Comparator.comparing(File::getName))
 				.collect(Collectors.toList());
 		} catch (IOException e) {
 			log.error("Cannot read JSON files from path {}", directory);
