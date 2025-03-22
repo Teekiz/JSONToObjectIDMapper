@@ -8,6 +8,7 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.FilenameUtils;
 
 public class JsonIDMapper
 {
@@ -93,5 +94,20 @@ public class JsonIDMapper
 			.stream()
 			.filter(file -> StringUtils.containsIgnoreCase(file.getValue().getName(), fileName))
 			.findFirst().orElse(null);
+	}
+
+	/**
+	 * A method used to find the name of a file, and return the corresponding ID.
+	 * @param fileName The name of the file used to get the corresponding ID (without the extension).
+	 * @return The ID of the file.
+	 */
+	public String getIDFromFileName(String fileName)
+	{
+		return data.entrySet()
+			.stream()
+			.filter(entry -> FilenameUtils.removeExtension(entry.getValue().getName()).equalsIgnoreCase(fileName))
+			.map(Map.Entry::getKey)
+			.findFirst()
+			.orElse("");
 	}
 }

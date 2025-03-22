@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsonidmapper.JsonIDMapper;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -37,5 +38,15 @@ public class JsonIDMapperTest
 
 		File fileLowerCase = jsonIDMapper.getFileByName("gaussrifle").getValue();
 		assertNotNull(fileLowerCase);
+	}
+
+	@Test
+	public void testGetIDFromFileName()
+	{
+		log.debug("TEST - testGetIDByName");
+		JsonIDMapper jsonIDMapper = new JsonIDMapper("src/test/resources/filepath.properties", "src/test/resources/storagepath.properties", true);
+
+		assertEquals("weaponData3", jsonIDMapper.getIDFromFileName("GAUSSRIFLE"));
+		assertEquals("", jsonIDMapper.getIDFromFileName("GAUSSRIFLE.JSON"));
 	}
 }

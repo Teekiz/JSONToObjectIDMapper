@@ -27,6 +27,7 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic:1.4.12'
 
     implementation 'org.apache.commons:commons-lang3:3.17.0'
+    implementation 'commons-io:commons-io:2.18.0'
 }
 
 tasks.test {
